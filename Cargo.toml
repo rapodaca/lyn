@@ -4,5 +4,10 @@ version = "0.1.0"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/rapodaca/lyn/"
+authors = ["Richard L. Apodaca"]
+readme = "README.MD"
+description = """
+A scanner useful for creating recursive descent parsers.
+"""
 
 [dependencies]
