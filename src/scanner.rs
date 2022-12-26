@@ -34,14 +34,10 @@ impl Scanner {
 
     /// Returns the next character (if available) and advances the cursor.
     pub fn pop(&mut self) -> Option<&char> {
-        match self.characters.get(self.cursor) {
-            Some(character) => {
-                self.cursor += 1;
-
-                Some(character)
-            }
-            None => None,
-        }
+        self.characters.get(self.cursor).map(|c| {
+            self.cursor += 1;
+            c
+        })
     }
 
     /// Returns true if the `target` is found at the current cursor position,
@@ -49,16 +45,11 @@ impl Scanner {
     /// Otherwise, returns false leaving the cursor unchanged.
     pub fn take(&mut self, target: &char) -> bool {
         match self.characters.get(self.cursor) {
-            Some(character) => {
-                if target == character {
-                    self.cursor += 1;
-
-                    true
-                } else {
-                    false
-                }
+            Some(character) if character == target => {
+                self.cursor += 1;
+                true
             }
-            None => false,
+            _ => false,
         }
     }
 
@@ -118,17 +109,12 @@ impl Scanner {
         &mut self,
         cb: impl FnOnce(&char) -> Option<T>,
     ) -> Option<T> {
-        match self.characters.get(self.cursor) {
-            Some(input) => match cb(input) {
-                Some(output) => {
-                    self.cursor += 1;
-
-                    Some(output)
-                }
-                None => None,
-            },
-            None => None,
-        }
+        self.characters.get(self.cursor).and_then(|c| {
+            cb(c).map(|c| {
+                self.cursor += 1;
+                c
+            })
+        })
     }
 }
 
